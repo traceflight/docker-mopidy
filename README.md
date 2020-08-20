@@ -9,9 +9,6 @@ Features of this image
 ----------------------
 
   * Follows [official installation](https://docs.mopidy.com/en/latest/installation/debian/) on top of [Debian](https://registry.hub.docker.com/_/debian/).
-  * With backend extensions for:
-      * [Mopidy-InternetArchive](https://mopidy.com/ext/internetarchive/) for **[InternetArchive](https://archive.org/)**
-      
   * With [Mopidy-MusicBox-Webclient](https://mopidy.com/ext/musicbox-webclient/) web extension.
   * Can run as any user and runs as UID/GID `84044` user inside the container by default (for security reasons).
 
