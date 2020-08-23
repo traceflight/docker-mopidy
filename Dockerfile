@@ -12,7 +12,6 @@ RUN set -ex \
        gnupg \
        python3-pip \
        pulseaudio \
-       alsa-base \
        alsa-utils \
        alsa-tools \
        alsa-firmware-loaders \
