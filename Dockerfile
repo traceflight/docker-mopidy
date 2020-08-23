@@ -11,6 +11,11 @@ RUN set -ex \
        dumb-init \
        gnupg \
        python3-pip \
+       pulseaudio \
+       alsa-base \
+       alsa-utils \
+       alsa-tools \
+       alsa-firmware-loaders \
     # Clean-up
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache
@@ -60,11 +65,8 @@ RUN /usr/bin/dumb-init /entrypoint.sh /usr/bin/mopidy --version
 
 VOLUME ["/var/lib/mopidy/local", "/var/lib/mopidy/media", "/var/lib/mopidy/playlists"]
 
-# 6600 mpd, 6680 http, 5555 audio ouput, 7777 dlna
-EXPOSE 6600 6680 5555/udp 7777
+# 6600 mpd, 6680 http, 7777 dlna
+EXPOSE 6600 6680 7777
 
 ENTRYPOINT ["/usr/bin/dumb-init", "/entrypoint.sh"]
 CMD ["/usr/bin/mopidy"]
-
-HEALTHCHECK --interval=5s --timeout=2s --retries=20 \
-    CMD curl --connect-timeout 5 --silent --show-error --fail http://localhost:6680/ || exit 1
