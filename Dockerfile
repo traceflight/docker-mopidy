@@ -37,7 +37,6 @@ RUN set -ex \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache
 
-ADD ./etc/upmpdcli.conf /etc/upmpdcli.conf
 
 RUN set -ex \
  && mkdir -p /var/lib/mopidy/.config \
@@ -49,15 +48,26 @@ COPY entrypoint.sh /entrypoint.sh
 # Default configuration.
 COPY ./etc/mopidy.conf /config/mopidy.conf
 
-# Allows any user to run mopidy, but runs by default as a randomly generated UID/GID.
-ENV HOME=/var/lib/mopidy
-RUN set -ex \
- && usermod -G audio,sudo mopidy \
- && chown mopidy:audio -R $HOME /entrypoint.sh \
- && chmod go+rwx -R $HOME /entrypoint.sh
+# Copy the upmpcli configuration.
+COPY ./etc/upmpdcli.conf /etc/upmpdcli.conf
 
-# Runs as mopidy user by default.
-USER mopidy
+# Copy the pulse-client configuratrion.
+COPY ./etc/pulse-client.conf /etc/pulse/client.conf
+
+ENV HOME=/var/lib/mopidy
+ENV UNAME=mopidy
+# Set up the user
+RUN export UNAME=$UNAME UID=1000 GID=1000 && \
+    mkdir -p ${HOME} && \
+    echo "${UNAME}:x:${UID}:${GID}:${UNAME} User,,,:${HOME}:/bin/bash" >> /etc/passwd && \
+    echo "${UNAME}:x:${UID}:" >> /etc/group && \
+    mkdir -p /etc/sudoers.d && \
+    echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${UNAME} && \
+    chmod 0440 /etc/sudoers.d/${UNAME} && \
+    chown ${UID}:${GID} -R ${HOME} /entrypoint.sh && \
+    gpasswd -a ${UNAME} audio
+
+USER $UNAME
 
 # Basic check,
 RUN /usr/bin/dumb-init /entrypoint.sh /usr/bin/mopidy --version
