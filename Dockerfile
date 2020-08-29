@@ -55,19 +55,6 @@ COPY ./etc/upmpdcli.conf /etc/upmpdcli.conf
 COPY ./etc/pulse-client.conf /etc/pulse/client.conf
 
 ENV HOME=/var/lib/mopidy
-ENV UNAME=mopidy
-# Set up the user
-RUN export UNAME=$UNAME UID=1000 GID=1000 && \
-    mkdir -p ${HOME} && \
-    echo "${UNAME}:x:${UID}:${GID}:${UNAME} User,,,:${HOME}:/bin/bash" >> /etc/passwd && \
-    echo "${UNAME}:x:${UID}:" >> /etc/group && \
-    mkdir -p /etc/sudoers.d && \
-    echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${UNAME} && \
-    chmod 0440 /etc/sudoers.d/${UNAME} && \
-    chown ${UID}:${GID} -R ${HOME} /entrypoint.sh && \
-    gpasswd -a ${UNAME} audio
-
-USER $UNAME
 
 # Basic check,
 RUN /usr/bin/dumb-init /entrypoint.sh /usr/bin/mopidy --version
