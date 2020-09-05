@@ -19,7 +19,7 @@ Usage
 
 ### Setup pulseaudio on host machine
 
-Since I run mopidy on my home server. No multi-user feature is used. So I run pulseaudio in [system-wide mode](https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/SystemWide/). 
+Since I run mopidy on my home server. No multi-user feature is used. So I run pulseaudio as [system-wide daemon](https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/SystemWide/). 
 
 #### Install pulseaudio
 
