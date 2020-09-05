@@ -40,6 +40,14 @@ load-module module-esound-protocol-tcp auth-anonymous=1
 load-module module-native-protocol-tcp auth-anonymous=1
 ```
 
+Group settings. 
+
+```
+usermod -a -G audio pulse
+usermod -a -G bluetooth pulse
+usermod -a -G pulse-access root 
+```
+
 #### Start pulseaudio
 
 ```
